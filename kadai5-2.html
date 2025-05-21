@@ -4,42 +4,28 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">人生アドバイスAPI</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
-        <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
+        クリックしてアドバイスをもらおう！
+        <button type="button" id="btn1" onclick="getAdvice()">実行</button>
     </p></form>
     
     <div id="result"></div>
-    <script>
-        async function some_api(myForm) {
-            // ここにコードを書く
-            
-            const name = myForm.form_data.value.trim();
-            if (!name) {
-                document.getElementById("result").innerHTML = "名前を入力してください。"
-                return;
-            }
 
-            const url = `https://api.agify.io/?name=${encodeURIComponent(name)}`;
+    <script>
+        async function getAdvice() {
+            const url = "https://api.adviceslip.com/advice";
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
 
-                if (data.age !== null) {
-                    document.getElementById("result").innerHTML = `名前「${data.name}」の予測年齢は${data.age}歳(サンプル数: ${data.count})です。`;
-                } else {
-                    document.getElementById("result").innerHTML = "年齢情報が見つかりませんでした。"
-                }
+                document.getElementById("result").innerHTML = 
+                    `💡 アドバイス:「${data.slip.advice}」`;
             } catch (error) {
-                document.getElementById("result").innerHTML = "エラーが発生しました。"
+                document.getElementById("result").innerHTML = "エラーが発生しました。";
                 console.error(error);
-            
             }
-
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
-            document.apiform.reset();
         }
     </script>
 </body>
